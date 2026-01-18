@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx markdownlint:*)",
+      "mcp__cognee__search",
+      "Bash(ls:*)"
+    ]
+  }
+}
