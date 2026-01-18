@@ -6,7 +6,7 @@ ARG VERSION=v1.0
 
 LABEL org.opencontainers.image.title="golang-tooling" \
     org.opencontainers.image.description="Alpine-based Go build image with security and linting toolchain" \
-    org.opencontainers.image.source="https://github.com/twistingmercury/go-alpine-base" \
+    org.opencontainers.image.source="https://github.com/twistingmercury/docker-golang-tooling" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.authors="Jeremy K. Johnson" \
     org.opencontainers.image.created="${BUILD_DATE}" \
