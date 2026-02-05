@@ -2,10 +2,9 @@
 
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 VCS_REF := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-VERSION := v1.0
-GO_VERSION := 1.25
+GO_VERSION := 1.25.7
 IMAGE_NAME := ghcr.io/twistingmercury/golang-tooling
-IMAGE_TAG := $(VERSION)-go$(GO_VERSION)-alpine
+IMAGE_TAG := go$(GO_VERSION)-alpine
 
 default: help
 
@@ -20,7 +19,7 @@ build: ## Builds the docker image
 	docker build \
 		--build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg VCS_REF=$(VCS_REF) \
-		--build-arg VERSION=$(VERSION) \
+		--build-arg VERSION=$(GO_VERSION) \
 		-t $(IMAGE_NAME):$(IMAGE_TAG) .
 
 push: ## Push the image to ghcr.io/twistingmercury
