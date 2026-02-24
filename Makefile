@@ -2,7 +2,7 @@
 
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 VCS_REF := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-GO_VERSION := 1.25.7
+GO_VERSION := 1.26
 IMAGE_NAME := ghcr.io/twistingmercury/golang-tooling
 IMAGE_TAG := go$(GO_VERSION)-alpine
 
