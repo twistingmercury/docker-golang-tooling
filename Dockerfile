@@ -1,8 +1,8 @@
-FROM golang:1.26-alpine
+FROM golang:alpine
 
 ARG BUILD_DATE
 ARG VCS_REF
-ARG VERSION=v1.26
+ARG VERSION=latest
 
 LABEL org.opencontainers.image.title="golang-tooling" \
     org.opencontainers.image.description="Alpine-based Go build image with security and linting toolchain" \
@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.title="golang-tooling" \
     org.opencontainers.image.created="${BUILD_DATE}" \
     org.opencontainers.image.revision="${VCS_REF}" \
     org.opencontainers.image.version="${VERSION}" \
-    org.opencontainers.image.base.name="golang:1.26-alpine"
+    org.opencontainers.image.base.name="golang:alpine"
 
 RUN apk add --no-cache git ca-certificates \
     && go install github.com/securego/gosec/v2/cmd/gosec@latest \
