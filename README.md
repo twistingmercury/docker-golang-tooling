@@ -2,7 +2,7 @@
 
 > **Maturity Level**: Emerging - Go build image with security and linting tools
 
-A Docker image extending golang:1.25-alpine with security scanning and code
+A Docker image extending golang:alpine with security scanning and code
 quality tools for Go development.
 
 ## Usage
@@ -10,13 +10,14 @@ quality tools for Go development.
 Pull the image from GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/twistingmercury/golang-tooling:v1.0-go1.25-alpine
+docker pull ghcr.io/twistingmercury/golang-tooling:alpine
+docker pull ghcr.io/twistingmercury/golang-tooling:go1.26.0-alpine
 ```
 
 Use as a base image in your Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/twistingmercury/golang-tooling:v1.0-go1.25-alpine AS build
+FROM ghcr.io/twistingmercury/golang-tooling:alpine AS build
 WORKDIR /src
 COPY . .
 ## Run linters, formatters, security scanners, etc
@@ -60,4 +61,7 @@ Build the image locally using the Makefile or Docker directly.
 
 ### Versioning
 
-Image tags follow the pattern `{version}-go{go-version}-alpine` (e.g., `v1.0-go1.25-alpine`).
+Published tags:
+
+- `alpine` - rolling tag for the latest `golang:alpine` base
+- `go{GO_VERSION}-alpine` - versioned tag derived from the Go version in `golang:alpine` at build time (for example, `go1.26.0-alpine`)
