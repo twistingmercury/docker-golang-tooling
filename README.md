@@ -65,3 +65,13 @@ Published tags:
 
 - `alpine` - rolling tag for the latest `golang:alpine` base
 - `go{GO_VERSION}-alpine` - versioned tag derived from the Go version in `golang:alpine` at build time (for example, `go1.26.0-alpine`)
+
+### GHCR Troubleshooting
+
+If GitHub Actions fails to push with `permission_denied: write_package`:
+
+1. Ensure repository secret `GHCR_PAT` is set.
+2. Use a classic PAT with scopes `write:packages` and `read:packages`.
+3. Add `repo` scope if the repository is private.
+4. In the package settings for `ghcr.io/twistingmercury/golang-tooling`, grant this repository write/admin access under Actions access.
+5. Confirm repository Actions workflow permissions are set to read and write.
