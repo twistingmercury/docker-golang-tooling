@@ -16,11 +16,13 @@ login: ## Log into ghcr.io
 	echo ${GITHUB_GHRC_PAT} | docker login ghcr.io -u twistingmercury --password-stdin
 
 build: ## Builds the docker image
-	docker build \
+	docker build --no-cache --pull \
 		--build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VERSION=$(GO_VERSION) \
 		-t $(IMAGE_NAME):$(IMAGE_TAG) .
+
+	docker run --rm $(IMAGE_NAME):$(IMAGE_TAG) go version
 
 push: ## Push the image to ghcr.io/twistingmercury
 	docker push $(IMAGE_NAME):$(IMAGE_TAG)
