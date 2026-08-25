@@ -2,9 +2,8 @@
 
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 VCS_REF := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-GO_VERSION := $(or $(shell go env GOVERSION 2>/dev/null | sed 's/^go//'),unknown)
 IMAGE_NAME := ghcr.io/twistingmercury/golang-tooling
-IMAGE_TAG := alpine
+GO_VERSION := $(shell go env GOVERSION)
 
 default: help
 
@@ -13,16 +12,16 @@ help: ## Show this help
 	@echo ""
 
 login: ## Log into ghcr.io
-	echo ${GITHUB_GHRC_PAT} | docker login ghcr.io -u twistingmercury --password-stdin
+	echo $(GITHUB_GHRC_PAT) | docker login ghcr.io -u twistingmercury --password-stdin
 
 build: ## Builds the docker image
 	docker build --no-cache --pull \
 		--build-arg BUILD_DATE=$(BUILD_DATE) \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg VERSION=$(GO_VERSION) \
-		-t $(IMAGE_NAME):$(IMAGE_TAG) .
-
-	docker run --rm $(IMAGE_NAME):$(IMAGE_TAG) go version
+		-t $(IMAGE_NAME):$(GO_VERSION) \
+		-t $(IMAGE_NAME):latest .
 
 push: ## Push the image to ghcr.io/twistingmercury
-	docker push $(IMAGE_NAME):$(IMAGE_TAG)
+	docker push $(IMAGE_NAME):$(GO_VERSION)
+	docker push $(IMAGE_NAME):latest
