@@ -14,7 +14,7 @@ LABEL org.opencontainers.image.title="golang-tooling" \
     org.opencontainers.image.version="${VERSION}" \
     org.opencontainers.image.base.name="golang:alpine"
 
-RUN apk add --no-cache git ca-certificates \
+RUN apk add --no-cache git ca-certificates bash gcc musl-dev \
     && go install github.com/securego/gosec/v2/cmd/gosec@latest \
     && go install golang.org/x/vuln/cmd/govulncheck@latest \
     && go install golang.org/x/tools/cmd/goimports@latest \

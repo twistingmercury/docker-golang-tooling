@@ -10,14 +10,14 @@ quality tools for Go development.
 Pull the image from GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/twistingmercury/golang-tooling:alpine
-docker pull ghcr.io/twistingmercury/golang-tooling:go1.26.0-alpine
+docker pull ghcr.io/twistingmercury/golang-tooling:latest
+docker pull ghcr.io/twistingmercury/golang-tooling:go1.26.6
 ```
 
 Use as a base image in your Dockerfile:
 
 ```dockerfile
-FROM ghcr.io/twistingmercury/golang-tooling:alpine AS build
+FROM ghcr.io/twistingmercury/golang-tooling:latest AS build
 WORKDIR /src
 COPY . .
 ## Run linters, formatters, security scanners, etc
@@ -28,7 +28,7 @@ RUN gosec ./...
 RUN go test -v ./...
 RUN go build -o /app/myapp .
 
-FROM alpine:latest AS runtime
+FROM scratch AS runtime
 RUN apk add --no-cache ca-certificates
 COPY --from=build /app/myapp /usr/local/bin/
 ENTRYPOINT ["myapp"]
