@@ -16,6 +16,7 @@ LABEL org.opencontainers.image.title="golang-tooling" \
 
 RUN apk add --no-cache git ca-certificates bash gcc musl-dev \
     && apk add --no-cache shellcheck=0.11.0-r1 make=4.4.1-r4 \
+    && go install github.com/swaggo/swag/cmd/swag@latest \
     && go install github.com/securego/gosec/v2/cmd/gosec@latest \
     && go install golang.org/x/vuln/cmd/govulncheck@latest \
     && go install golang.org/x/tools/cmd/goimports@latest \
