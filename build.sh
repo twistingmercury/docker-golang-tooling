@@ -3,16 +3,17 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 IS_LOCAL="${IS_LOCAL:-0}"
 IMAGE_NAME=ghcr.io/twistingmercury/golang-tooling
-GO_VERSION=$(shell go env GOVERSION)
+GO_VERSION=$(go env GOVERSION)
+BUILD_DATE="${BUILD_DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
+BUILD_COMMIT="${BUILD_COMMIT:-$(git -C "${SCRIPT_DIR}" rev-parse --short HEAD 2>/dev/null || echo 'unknown')}"
 
 cleanup_local_image() {
     local exit_status=$?
 
     if [[ "${IS_LOCAL}" == "1" ]]; then
-        docker rmi "$(IMAGE_NAME):$(GO_VERSION)" -f || true
+        docker rmi "${IMAGE_NAME}:${GO_VERSION}" "${IMAGE_NAME}:latest" -f || true
     fi
 
     exit "${exit_status}"
@@ -22,11 +23,11 @@ main(){
     trap cleanup_local_image EXIT
 
     docker build --no-cache --pull \
-    --build-arg BUILD_DATE=$(BUILD_DATE) \
-    --build-arg VCS_REF=$(VCS_REF) \
-    --build-arg VERSION=$(GO_VERSION) \
-    -t $(IMAGE_NAME):$(GO_VERSION) \
-    -t $(IMAGE_NAME):latest .
+    --build-arg BUILD_DATE="${BUILD_DATE}" \
+    --build-arg VCS_REF="${BUILD_COMMIT}" \
+    --build-arg VERSION="${GO_VERSION}" \
+    -t "${IMAGE_NAME}:${GO_VERSION}" \
+    -t "${IMAGE_NAME}:latest" "${SCRIPT_DIR}"
 }
 
 main "$@"
