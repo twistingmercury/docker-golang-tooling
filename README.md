@@ -1,9 +1,24 @@
 # golang-tooling
 
-> **Maturity Level**: Emerging - Go build image with security and linting tools
+> **Maturity Level**: Emerging - Go build image with security and linting tools; the tool set may change between releases
+> **Version**: v1.27.2
+>
+> - **Emerging**: Prototype, not production-ready, expect breaking changes
+> - **Basic**: Production-ready but actively evolving, expect minor version changes
+> - **Mature**: Stable, battle-tested, changes are rare
+
+---
 
 It's `golang:alpine` with all the security and linting tools you'd normally
 install yourself already baked in.
+
+## Table of Contents
+
+- [Usage](#usage)
+- [How it works](#how-it-works)
+- [Key Considerations](#key-considerations)
+- [Development Considerations](#development-considerations)
+- [Versioning](#versioning)
 
 ## Usage
 
@@ -11,7 +26,7 @@ Grab it from GitHub Container Registry:
 
 ```bash
 docker pull ghcr.io/twistingmercury/golang-tooling:latest
-docker pull ghcr.io/twistingmercury/golang-tooling:go1.27.1
+docker pull ghcr.io/twistingmercury/golang-tooling:go1.27.2
 ```
 
 > I recommend not using `latest` for production builds. Pin the image to the
@@ -69,17 +84,27 @@ works, plus bash, gcc, and musl-dev for scripts and cgo builds.
 
 ## Development Considerations
 
-### Building
+### Quick Start
 
-Build it locally with the Makefile, or just call Docker directly.
+Build it locally with the Makefile; `make build` runs `build.sh`, which tags
+the image `go{GO_VERSION}` and `latest` and fills in the OCI labels:
 
-### Versioning
+```bash
+make build
+```
 
-Here are the tags that get published:
+Set `IS_LOCAL=1` to have `build.sh` remove the local images when it finishes.
+To publish, run `make login` (needs `GITHUB_GHRC_PAT` in your environment),
+then `make push`.
 
-- `latest` - always tracks the newest `golang:alpine`
-- **(RECOMMENDED)** `go{GO_VERSION}` - pinned to the Go version that was in
-  `golang:alpine` when the image was built (for example, `go1.27.1`)
+### Testing
+
+There are no automated tests. After a build, confirm the tools are in the image:
+
+```bash
+docker run --rm ghcr.io/twistingmercury/golang-tooling:latest sh -c \
+  'go version && gosec -version && govulncheck -version && golangci-lint version && goimports -h 2>&1 | head -1 && swag -v && shellcheck -V && make -v | head -1'
+```
 
 ### GHCR Troubleshooting
 
@@ -92,3 +117,19 @@ these:
 4. In the package settings for `ghcr.io/twistingmercury/golang-tooling`, this
    repository has write/admin access under Actions access.
 5. The repository's Actions workflow permissions are set to read and write.
+
+## Versioning
+
+This project follows [Semantic Versioning 2.0.0](https://semver.org/).
+
+Version is determined from git tags:
+
+```bash
+git describe --tags --always
+```
+
+The published image tags are:
+
+- `latest` - always tracks the newest `golang:alpine`
+- **(RECOMMENDED)** `go{GO_VERSION}` - pinned to the Go version that was in
+  `golang:alpine` when the image was built (for example, `go1.27.2`)

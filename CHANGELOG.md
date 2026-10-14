@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `make build` now runs `build.sh` instead of calling `docker build` directly, so local builds set the OCI version, build date, and revision labels
+- README restructured to follow the standard README template
+
 ## [1.27.2] - 2026-10-14
 
 ### Changed

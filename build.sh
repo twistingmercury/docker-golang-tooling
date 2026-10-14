@@ -22,7 +22,7 @@ cleanup_local_image() {
 main(){
     trap cleanup_local_image EXIT
 
-    docker build --no-cache --pull \
+    docker build --rm --no-cache --pull --progress=plain \
     --build-arg BUILD_DATE="${BUILD_DATE}" \
     --build-arg VCS_REF="${BUILD_COMMIT}" \
     --build-arg VERSION="${GO_VERSION}" \

@@ -9,7 +9,7 @@ A single Docker image, `ghcr.io/twistingmercury/golang-tooling`: `golang:alpine`
 ## Commands
 
 ```bash
-make build   # docker build --no-cache --pull, tags :<GO_VERSION> and :latest
+make build   # runs ./build.sh: docker build --no-cache --pull, tags :<GO_VERSION> and :latest
 make push    # push both tags
 make login   # needs GITHUB_GHRC_PAT in env
 ```
@@ -24,10 +24,10 @@ docker run --rm ghcr.io/twistingmercury/golang-tooling:latest sh -c \
 
 ## How the image is built and tagged
 
-- `Dockerfile` does everything in one `RUN`: `apk add` (git, ca-certificates, bash, gcc, musl-dev, plus pinned `shellcheck` and `make`), then `go install ...@latest` for swag, gosec, govulncheck, goimports, golangci-lint (v2 module path). Go tools float to latest; apk packages added in recent commits are pinned to exact Alpine revisions (`pkg=x.y.z-rN`), and those pins break when the `golang:alpine` base moves to a newer Alpine release.
+- `Dockerfile` does everything in one `RUN`: `apk add` (git, ca-certificates, bash, gcc, musl-dev, plus pinned `shellcheck` and `make`), then `go install` for swag, gosec, govulncheck, goimports, golangci-lint (v2 module path). Go tools float to `@latest`, except gosec, which is pinned to a commit SHA; apk packages added in recent commits are pinned to exact Alpine revisions (`pkg=x.y.z-rN`), and those pins break when the `golang:alpine` base moves to a newer Alpine release.
 - The base is rolling `golang:alpine`, so the Go version is whatever that tag resolves to at build time.
 - **Version tagging differs between local and CI:**
-  - `Makefile` sets `GO_VERSION` from the *host's* `go env GOVERSION` (e.g. `go1.27.0`) and passes it as both the tag and the `VERSION` build arg. If the host Go doesn't match the base image, the tag is wrong.
+  - `make build` runs `build.sh`, which sets `GO_VERSION` from the *host's* `go env GOVERSION` (e.g. `go1.27.0`) and passes it as both the tag and the `VERSION` build arg. If the host Go doesn't match the base image, the tag is wrong. `build.sh` also sets `BUILD_DATE` and `VCS_REF` (short HEAD SHA), and `IS_LOCAL=1` removes the local images when it exits.
   - `.github/workflows/publish.yml` pulls `golang:alpine` and runs `go env GOVERSION` *inside it*: tag is `go1.27.0`, `VERSION` label is `1.27.0` (prefix stripped).
 - CI publishes `:latest` and `:go<ver>` on every push to `develop` or `main` (and on `workflow_dispatch`). It needs the `GHCR_PAT` repo secret; see README "GHCR Troubleshooting" for PAT scopes and package access.
 - OCI labels get their values from `BUILD_DATE`, `VCS_REF`, and `VERSION` build args.
