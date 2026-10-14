@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.2] - 2026-10-14
+
+### Changed
+
+- Pinned gosec version to `71577268350e1e0f2f1491de1ef53f1227b43c1f`
+
 ## [1.27.1] - 2026-09-28
 
 ### Added
