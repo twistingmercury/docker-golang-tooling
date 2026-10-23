@@ -12,6 +12,9 @@
 It's `golang:alpine` with all the security and linting tools you'd normally
 install yourself already baked in.
 
+For how to use it and get the most out of it, see the
+[wiki](https://github.com/twistingmercury/docker-golang-tooling/wiki).
+
 ## Table of Contents
 
 - [Usage](#usage)
@@ -58,6 +61,13 @@ A quick note on `CGO_ENABLED`: it's a build-stage arg, so it only changes how
 `0` and you get a static binary that runs fine on `scratch`. If your app needs
 cgo, pass `--build-arg CGO_ENABLED=1`, but then the binary needs musl at
 runtime, so swap `scratch` for something that has it, like `alpine`.
+
+The [wiki](https://github.com/twistingmercury/docker-golang-tooling/wiki) goes
+further, with a build stage and `build.sh` to start from, what each tool does
+and the order to run them in, and examples for building
+[packages](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-Packages),
+[CLIs](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-CLIs),
+and [services](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-Services).
 
 ## How it works
 

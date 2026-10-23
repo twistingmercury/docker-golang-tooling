@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Dependabot config for the base image and workflow actions (weekly, grouped)
+- README links to the wiki for how to use the image
 - go-licenses v2.0.1, for checking dependency licenses against an allowed list and writing an attribution report
 
 ### Changed
