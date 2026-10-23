@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `make build` now runs `build.sh` instead of calling `docker build` directly, so local builds set the OCI version, build date, and revision labels
 - README restructured to follow the standard README template
 - Go tools (swag, govulncheck, goimports, golangci-lint) are pinned to exact versions instead of `@latest`, so rebuilds are repeatable
+- The publish workflow only runs on pushes that change the `Dockerfile` or the workflow itself, so docs-only pushes no longer republish the image or change its digest
 - Image is much smaller: the Go build and module caches left by `go install` are now cleared in the same layer
 
 ## [1.27.2] - 2026-10-14

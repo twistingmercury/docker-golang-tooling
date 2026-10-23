@@ -5,6 +5,11 @@ on:
     branches:
       - develop
       - main
+    # The image is built only from the Dockerfile, so docs-only pushes don't
+    # republish it and change its digest. Use workflow_dispatch to force one.
+    paths:
+      - Dockerfile
+      - .github/workflows/publish.yml
   workflow_dispatch:
 
 permissions:
