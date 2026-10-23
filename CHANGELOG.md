@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Dependabot config for the base image and workflow actions (weekly, grouped)
+- go-licenses v2.0.1, for checking dependency licenses against an allowed list and writing an attribution report
+
 ### Changed
 
+- Base image is pinned to a version tag and digest (`golang:1.27.3-alpine3.24@sha256:...`) instead of rolling `golang:alpine`
+- `build.sh` and the publish workflow read the Go version for tags from the Dockerfile `FROM` line instead of the host Go or the pulled base image
 - `make build` now runs `build.sh` instead of calling `docker build` directly, so local builds set the OCI version, build date, and revision labels
 - README restructured to follow the standard README template
+- Go tools (swag, govulncheck, goimports, golangci-lint) are pinned to exact versions instead of `@latest`, so rebuilds are repeatable
+- Image is much smaller: the Go build and module caches left by `go install` are now cleared in the same layer
 
 ## [1.27.2] - 2026-10-14
 

@@ -5,7 +5,8 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 IS_LOCAL="${IS_LOCAL:-0}"
 IMAGE_NAME=ghcr.io/twistingmercury/golang-tooling
-GO_VERSION=$(go env GOVERSION)
+# the Dockerfile FROM line is the source of truth, so the tag always matches the base
+GO_VERSION="go$(sed -nE 's/^FROM golang:([0-9.]+)-alpine.*/\1/p' "${SCRIPT_DIR}/Dockerfile")"
 BUILD_DATE="${BUILD_DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
 BUILD_COMMIT="${BUILD_COMMIT:-$(git -C "${SCRIPT_DIR}" rev-parse --short HEAD 2>/dev/null || echo 'unknown')}"
 

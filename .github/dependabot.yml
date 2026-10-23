@@ -1,0 +1,22 @@
+# Keeps the pinned base image and workflow actions current. Dependabot bumps
+# the FROM tag and its digest together. It does not track the apk pins
+# (shellcheck, make) or the pinned `go install ...@version` tools, so a base bump may
+# need the apk pins refreshed before the build passes.
+version: 2
+
+updates:
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      docker:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

@@ -69,6 +69,8 @@ base image:
 - **goimports** - fixes up your imports
 - **golangci-lint** - runs a whole pile of linters at once
 - **swag** - generates Swagger docs for Go APIs
+- **go-licenses** - checks your dependencies' licenses against an allowed list and
+  writes a report of them
 - **shellcheck** - lints shell scripts
 - **make** - for your Makefiles
 
@@ -77,7 +79,7 @@ works, plus bash, gcc, and musl-dev for scripts and cgo builds.
 
 ## Key Considerations
 
-- The tools are whatever the latest version was when the image got built
+- The tools are pinned to exact versions in the Dockerfile, so they only change when the Dockerfile does
 - It's bigger than plain `golang:alpine` since all that tooling has to live
   somewhere
 - Use a multi-stage build so none of it ends up in your final image
@@ -103,7 +105,7 @@ There are no automated tests. After a build, confirm the tools are in the image:
 
 ```bash
 docker run --rm ghcr.io/twistingmercury/golang-tooling:latest sh -c \
-  'go version && gosec -version && govulncheck -version && golangci-lint version && goimports -h 2>&1 | head -1 && swag -v && shellcheck -V && make -v | head -1'
+  'go version && gosec -version && govulncheck -version && golangci-lint version && goimports -h 2>&1 | head -1 && swag -v && go version -m "$(command -v go-licenses)" | grep "mod.*go-licenses" && shellcheck -V && make -v | head -1'
 ```
 
 ### GHCR Troubleshooting
@@ -130,6 +132,6 @@ git describe --tags --always
 
 The published image tags are:
 
-- `latest` - always tracks the newest `golang:alpine`
-- **(RECOMMENDED)** `go{GO_VERSION}` - pinned to the Go version that was in
-  `golang:alpine` when the image was built (for example, `go1.27.2`)
+- `latest` - the most recent build
+- **(RECOMMENDED)** `go{GO_VERSION}` - the Go version of the pinned base image
+  in the `Dockerfile` (for example, `go1.27.3`)
