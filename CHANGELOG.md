@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.27.3] - 2026-10-23
+
 ### Added
 
 - Dependabot config for the base image and workflow actions (weekly, grouped)
-- README links to the wiki for how to use the image
 - go-licenses v2.0.1, for checking dependency licenses against an allowed list and writing an attribution report
 
 ### Changed
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `build.sh` and the publish workflow read the Go version for tags from the Dockerfile `FROM` line instead of the host Go or the pulled base image
 - `make build` now runs `build.sh` instead of calling `docker build` directly, so local builds set the OCI version, build date, and revision labels
 - README restructured to follow the standard README template
+- README now treats the wiki as the source of truth for usage: the duplicated Dockerfile example, `CGO_ENABLED` note, and tool descriptions are gone, and the version line is corrected and on its own line
 - Go tools (swag, govulncheck, goimports, golangci-lint) are pinned to exact versions instead of `@latest`, so rebuilds are repeatable
 - The publish workflow only runs on pushes that change the `Dockerfile` or the workflow itself, so docs-only pushes no longer republish the image or change its digest
 - Image is much smaller: the Go build and module caches left by `go install` are now cleared in the same layer

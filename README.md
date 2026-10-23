@@ -1,7 +1,8 @@
 # golang-tooling
 
 > **Maturity Level**: Emerging - Go build image with security and linting tools; the tool set may change between releases
-> **Version**: v1.27.2
+>
+> **Version**: v1.27.3
 >
 > - **Emerging**: Prototype, not production-ready, expect breaking changes
 > - **Basic**: Production-ready but actively evolving, expect minor version changes
@@ -11,9 +12,6 @@
 
 It's `golang:alpine` with all the security and linting tools you'd normally
 install yourself already baked in.
-
-For how to use it and get the most out of it, see the
-[wiki](https://github.com/twistingmercury/docker-golang-tooling/wiki).
 
 ## Table of Contents
 
@@ -25,73 +23,37 @@ For how to use it and get the most out of it, see the
 
 ## Usage
 
-Grab it from GitHub Container Registry:
+Use it as the build stage of your own Dockerfile. Grab it from GitHub Container
+Registry:
 
 ```bash
-docker pull ghcr.io/twistingmercury/golang-tooling:latest
-docker pull ghcr.io/twistingmercury/golang-tooling:go1.27.2
+docker pull ghcr.io/twistingmercury/golang-tooling:go1.27.3
 ```
 
 > I recommend not using `latest` for production builds. Pin the image to the
-> Go version your app needs.
+> Go version your app needs, and to its digest.
 
-Then use it as the build stage in your Dockerfile:
-
-```dockerfile
-FROM ghcr.io/twistingmercury/golang-tooling:latest AS build
-ARG CGO_ENABLED=0
-WORKDIR /src
-COPY . .
-## Run linters, formatters, security scanners, etc
-RUN goimports -w .
-RUN golangci-lint run
-RUN govulncheck ./...
-RUN gosec ./...
-RUN go test -v ./...
-RUN go build -o /app/myapp .
-
-FROM scratch AS runtime
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build /app/myapp /usr/local/bin/
-ENTRYPOINT ["myapp"]
-```
-
-A quick note on `CGO_ENABLED`: it's a build-stage arg, so it only changes how
-`go build` links your binary. It doesn't touch the runtime image. Leave it at
-`0` and you get a static binary that runs fine on `scratch`. If your app needs
-cgo, pass `--build-arg CGO_ENABLED=1`, but then the binary needs musl at
-runtime, so swap `scratch` for something that has it, like `alpine`.
-
-The [wiki](https://github.com/twistingmercury/docker-golang-tooling/wiki) goes
-further, with a build stage and `build.sh` to start from, what each tool does
-and the order to run them in, and examples for building
-[packages](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-Packages),
+The [wiki](https://github.com/twistingmercury/docker-golang-tooling/wiki) is the
+source of truth for how to use the image: a build stage and `build.sh` to start
+from, what each tool does and the order to run them in, and examples for
+building [packages](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-Packages),
 [CLIs](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-CLIs),
 and [services](https://github.com/twistingmercury/docker-golang-tooling/wiki/Building-Services).
 
 ## How it works
 
 Instead of installing the same tools in every build, you get them all in one
-base image:
-
-- **gosec** - finds security issues in Go code
-- **govulncheck** - checks your dependencies for known vulnerabilities
-- **goimports** - fixes up your imports
-- **golangci-lint** - runs a whole pile of linters at once
-- **swag** - generates Swagger docs for Go APIs
-- **go-licenses** - checks your dependencies' licenses against an allowed list and
-  writes a report of them
-- **shellcheck** - lints shell scripts
-- **make** - for your Makefiles
-
-You also get git and ca-certificates so fetching dependencies over TLS just
-works, plus bash, gcc, and musl-dev for scripts and cgo builds.
+base image: gosec, govulncheck, goimports, golangci-lint, swag, go-licenses,
+shellcheck, and make, plus git, ca-certificates, bash, gcc, and musl-dev. The
+[wiki](https://github.com/twistingmercury/docker-golang-tooling/wiki/The-Tools)
+covers what each one is for.
 
 ## Key Considerations
 
-- The tools are pinned to exact versions in the Dockerfile, so they only change when the Dockerfile does
-- It's bigger than plain `golang:alpine` since all that tooling has to live
-  somewhere
+- The base image and every tool are pinned to exact versions in the
+  `Dockerfile`, so they only change when the `Dockerfile` does
+- The image is about 1 GB, bigger than plain `golang:alpine` since all that
+  tooling has to live somewhere
 - Use a multi-stage build so none of it ends up in your final image
 
 ## Development Considerations
