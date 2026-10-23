@@ -1,6 +1,6 @@
 # golang-tooling
 
-> **Maturity Level**: Emerging - Go build image with security and linting tools; the tool set may change between releases
+> **Maturity Level**: Basic - Go build image with security and linting tools.
 >
 > **Version**: v1.27.3
 >
